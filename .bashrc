@@ -116,5 +116,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-alias ssd='sudo mount /dev/sda /media/allen/ssd'
-alias scl='cd /medial/allen/ssd/school/'
+alias ssd='sudo mount /dev/sda /media/allen/ssd/'
+alias scl='cd /media/allen/ssd/school/'
+alias prgm='~/.scripts/prgm'
