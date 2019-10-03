@@ -119,3 +119,4 @@ fi
 alias ssd='sudo mount /dev/sda /media/allen/ssd/'
 alias scl='cd /media/allen/ssd/school/'
 alias prgm='~/.scripts/prgm'
+export PATH="~/.scripts:$PATH"
