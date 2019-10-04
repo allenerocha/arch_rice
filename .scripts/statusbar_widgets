@@ -28,7 +28,7 @@ get_cpu_tmp() {
 }
 
 get_mem() {
-	echo -e '🤔'
+	echo -e '🧠'
 	free -h | awk '{ if($1=="Mem:") print $3,"/",$2 }' | sed 's/Gi/G/g'
 }
 
