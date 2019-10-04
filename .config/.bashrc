@@ -116,6 +116,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+
+alias vim='vim -u ~/.config/.vimrc'
 alias ssd='sudo mount /dev/sda /media/allen/ssd/'
 alias scl='cd /media/allen/ssd/school/'
 alias prgm='~/.scripts/prgm'
