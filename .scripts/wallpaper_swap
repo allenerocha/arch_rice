@@ -1,0 +1,7 @@
+#!/usr/bin/sh
+
+while [ true ]
+do
+	echo hey
+	sleep 1m
+done

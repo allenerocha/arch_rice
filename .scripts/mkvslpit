@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+from sys import argv as arg
+import subprocess
+import re
+
+def main():
+    def help():
+        print('Print help text')
+        exit()
+
+    if arg[1] == '-help' or arg[1] == 'help' or arg[1] == 'h':
+        help()
+
+    # input file directory
+    IN_PATH = arg[1]
+
+    # output directory for file
+    OUT_PATH = ''
+
+    if len(arg) > 2:
+        if arg[2][-1] != '/':
+            OUT_PATH = arg[2] + '/'
+        else:
+            OUT_PATH = arg[2]
+    else:
+        temp = IN_PATH.split('/')[-1]
+        OUT_PATH = IN_PATH[:-len(temp)] + '/'
+
+
+    time_codes = {}
+    titles = []
+
+# ffmpeg -i /media/allen/HDD/Music/MUSIC\ VIDEOS/BABYMETAL/LIVE\ AT\ TOKYO\ DOME/blk/Black-Night.mkv 2>&1 | awk '{ if($1=="Chapter" ) print $0 }' | awk '{ print $4,"\t", $6 }' | sed -E -e 's/,//g'
+# ffmpeg -i /media/allen/HDD/Music/MUSIC\ VIDEOS/BABYMETAL/LIVE\ AT\ TOKYO\ DOME/blk/Black-Night.mkv 2>&1 | awk '{ if($1=="title" ) print $3 }'
+
+    try:
+        ffmpeg = subprocess.call('ffmpeg -i "{}" 2>&1 | awk \''.format(IN_PATH) + '{ if($1==\"Chapter\") print $0 }\' | awk \'{ print $4,\" \",$6 }\' | sed -E -e \'s/,//g\' > mkvchaptersplit.temp', shell=True)
+
+        with open('mkvchaptersplit.temp','a+') as temp_file:
+            for line in temp_file.readlines():
+                time_code_start = line.split('  ')[0].strip()
+                time_code_end = line.split('  ')[1].strip()
+                time_codes[time_code_start] = time_code_end
+
+            temp_file.write('####\n')
+
+        title_call = subprocess.call('ffmpeg -i "{}" '.format(IN_PATH) + '2>&1 | awk \'{ if($1==\"title\") print $3 }\' >> mkvchaptersplit.temp', shell=True)
+
+    except Exception as e:
+        print('ERROR\n' + str(e))
+
+    title_flag = False
+
+    with open('mkvchaptersplit.temp','r') as temp_file:
+        for line in temp_file.readlines():
+            if title_flag is True:
+                titles.append(line.strip().replace(' ', '_'))
+            if '####' in line:
+                title_flag = True
+            elif '####' not in line and not title_flag:
+                time_codes[line.split('  ')[0].strip()] = line.split('  ')[1].strip()
+
+        titles = titles[1:-1]
+
+        index = 0
+        for key,value in time_codes.items():
+            subprocess.call('ffmpeg -ss {} -i "{}" -threads 4 -to {} -acodec copy -vcodec copy "{}{}".mkv'.format(key, IN_PATH, value, OUT_PATH, titles[index]), shell=True)
+            index += 1
+
+if __name__ == '__main__':
+    main()

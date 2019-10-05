@@ -1,0 +1,4 @@
+program_function() {
+	vim /media/allen/ssd/programming/"$1"/"$2"
+}
+program_function $1 $2
