@@ -16,8 +16,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=12000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -119,6 +119,91 @@ fi
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
+
+# List of color variables that bash can use
+#local BLACK="\[\033[0;30m\]"   # Black
+#local DGREY="\[\033[1;30m\]"   # Dark Gray
+local RED="\[\033[0;31m\]"     # Red
+#local LRED="\[\033[1;31m\]"    # Light Red
+#local GREEN="\[\033[0;32m\]"   # Green
+#local LGREEN="\[\033[1;32m\]"  # Light Green
+#local BROWN="\[\033[0;33m\]"   # Brown
+#local YELLOW="\[\033[0;33m\]"  # Yellow
+#local LYELLOW="\[\033[1;33m\]" # Light Yellow
+#local BLUE="\[\033[0;34m\]"    # Blue
+#local LBLUE="\[\033[1;34m\]"   # Light Blue
+#local PURPLE="\[\033[0;35m\]"  # Purple
+#local LPURPLE="\[\033[1;35m\]" # Light Purple
+#local CYAN="\[\033[0;36m\]"    # Cyan
+#local LCYAN="\[\033[1;36m\]"   # Light Cyan
+#local LGREY="\[\033[0;37m\]"   # Light Gray
+#local WHITE="\[\033[1;37m\]"   # White
+#
+#local RESET="\[\033[0m\]"      # Color reset
+#local BOLD="\[\033[;1m\]"      # Bold
+
+# Base prompt
+local CNAME=$(hostname -s)
+
+local CNAME_MD5
+if [ "${OSTYPE:0:6}" == 'darwin' ] ; then
+    CNAME_MD5=$(hostname -s | md5)
+else
+    CNAME_MD5=$(hostname -s | md5sum)
+fi
+
+local RDEC=$((16#${CNAME_MD5:0:2}))
+local GDEC=$((16#${CNAME_MD5:2:2}))
+local BDEC=$((16#${CNAME_MD5:4:2}))
+PS1="\e[38;2;${RDEC};${GDEC};${BDEC}m$CNAME:$YELLOW\w$CYAN "
+if [ $EXIT != 0 ]; then
+    PS1+="${LRED}\\\$ $RESET"
+else
+    PS1+="${LGREEN}\\\$ $RESET"
+fi
+# List of color variables that bash can use
+#local BLACK="\[\033[0;30m\]"   # Black
+#local DGREY="\[\033[1;30m\]"   # Dark Gray
+local RED="\[\033[0;31m\]"     # Red
+#local LRED="\[\033[1;31m\]"    # Light Red
+#local GREEN="\[\033[0;32m\]"   # Green
+#local LGREEN="\[\033[1;32m\]"  # Light Green
+#local BROWN="\[\033[0;33m\]"   # Brown
+#local YELLOW="\[\033[0;33m\]"  # Yellow
+#local LYELLOW="\[\033[1;33m\]" # Light Yellow
+#local BLUE="\[\033[0;34m\]"    # Blue
+#local LBLUE="\[\033[1;34m\]"   # Light Blue
+#local PURPLE="\[\033[0;35m\]"  # Purple
+#local LPURPLE="\[\033[1;35m\]" # Light Purple
+#local CYAN="\[\033[0;36m\]"    # Cyan
+#local LCYAN="\[\033[1;36m\]"   # Light Cyan
+#local LGREY="\[\033[0;37m\]"   # Light Gray
+#local WHITE="\[\033[1;37m\]"   # White
+#
+#local RESET="\[\033[0m\]"      # Color reset
+#local BOLD="\[\033[;1m\]"      # Bold
+
+# Base prompt
+local CNAME=$(hostname -s)
+
+local CNAME_MD5
+if [ "${OSTYPE:0:6}" == 'darwin' ] ; then
+    CNAME_MD5=$(hostname -s | md5)
+else
+    CNAME_MD5=$(hostname -s | md5sum)
+fi
+
+local RDEC=$((16#${CNAME_MD5:0:2}))
+local GDEC=$((16#${CNAME_MD5:2:2}))
+local BDEC=$((16#${CNAME_MD5:4:2}))
+PS1="\e[38;2;${RDEC};${GDEC};${BDEC}m$CNAME:$YELLOW\w$CYAN "
+if [ $EXIT != 0 ]; then
+    PS1+="${LRED}\\\$ $RESET"
+else
+    PS1+="${LGREEN}\\\$ $RESET"
+fi
+
+export PS1="\[\e[36m\]\u\[\e[m\]\[\e[32m\]@\[\e[m\]\[\e[36m\]\h\[\e[m\]\[\e[37m\]:\[\e[m\]\[\e[32m\]\W\[\e[m\]\[\e[37m\]\\$\[\e[m\] "
 
 alias vim='vim -u ~/.config/.vimrc'
 alias ssd='sudo mount /dev/sda /media/allen/ssd/'
