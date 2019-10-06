@@ -33,6 +33,7 @@ set clipboard+=unnamedplus
 	syntax on
 	set encoding=utf-8
 	set relativenumber
+	set backspace=indent,eol,start
 " Enable autocompletion:
 	set wildmode=longest,list,full
 " Disables automatic commenting on newline:

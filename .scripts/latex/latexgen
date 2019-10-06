@@ -1,0 +1,4 @@
+#!/usr/bin/sh
+
+cp ~/.config/latex_templates/'$1'.tex '$2'
+mv '$2'.tex '$3'.tex
