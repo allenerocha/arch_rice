@@ -27,6 +27,11 @@ get_cpu_tmp() {
 	sensors | awk '{ if($1=="Core") print $1,"",$2,"-",$3 }' | sed 's/+//g'
 }
 
+get_gpu_tmp() {
+	gpu_tmp=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader)
+	printf "🌡️ $gpu_tmp°C\n"
+}
+
 get_mem() {
 	echo -e '🧠'
 	free -h | awk '{ if($1=="Mem:") print $3,"/",$2 }' | sed 's/Gi/G/g'
@@ -46,6 +51,7 @@ while [ true ]
 do
 	get_btry
 	get_cpu_tmp
+	get_gpu_tmp
 	get_mem
 	get_stg
 	get_dte_and_tme
