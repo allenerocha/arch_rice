@@ -1,7 +1,18 @@
-#!/usr/bin/sh
+#!/bin/bash
+
+gsettings set org.gnome.desktop.background picture-uri file:///home/allen/Pictures/01.png
 
 while [ true ]
 do
-	echo hey
+	RAND_INT=$RANDOM
+
+	FILE_COUNT=$(ls $HOME/Pictures/wallpapers | wc -l)
+
+	let "RAND_INT %= $FILE_COUNT"
+	let "RAND_INT += 1"
+
+	gsettings set org.gnome.desktop.background picture-uri file:///home/allen/Pictures/wallpapers/$RAND_INT.png
+	gsettings get org.gnome.desktop.background picture-uri
+
 	sleep 1m
 done
