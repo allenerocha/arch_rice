@@ -1,12 +1,11 @@
 get_btry() {
 	bat_status=$(upower -i $(upower -e | grep BAT) | awk '{if($1=="state:") print $2}')
 
+	# checks if the battery is charging
 	if [ $bat_status == 'charging' ]
 	then
-		# thunderbolt
 		printf '⚡'
 	else
-		# battery
 		printf '🔋'
 	fi
 	upower -i $(upower -e | grep BAT) | awk '{ if($1=="percentage:") print $2 }'
@@ -22,19 +21,41 @@ get_cpu_tmp() {
 	done
 
 	avg_tmp=$(echo "$total / $count" | bc)
-	printf "🌡️ $avg_tmp°C\n"
 
-	sensors | awk '{ if($1=="Core") print $1,"",$2,"-",$3 }' | sed 's/+//g'
+	# checks if the cpu temp is over 45C
+	if [[ $avg_temp -lt 45 ]]
+	then
+		printf "🥶 $avg_tmp°C\n"
+	else
+		printf "🥵 $avg_tmp°C\n"
+	fi
+
+	sensors | awk '{ if($1=="Core") print "🌡️"," ",$3 }' | sed 's/+//g'
 }
 
 get_gpu_tmp() {
 	gpu_tmp=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader)
-	printf "🌡️ $gpu_tmp°C\n"
+
+	# checks if the gpu temp is over 45C
+	if [[ $gpu_temp -lt 45 ]]
+	then
+		printf "❄ $gpu_tmp°C\n"
+	else
+		printf "🔥 $gpu_temp°C\n"
+	fi
 }
 
 get_mem() {
-	echo -e '🧠'
-	free -h | awk '{ if($1=="Mem:") print $3,"/",$2 }' | sed 's/Gi/G/g'
+	used_mem=$(free -h | awk '{ if($1=="Mem:") print $3 }' | sed 's/Gi//g')
+	total_mem=$(free -h | awk '{ if($1=="Mem:") print $2 }' | sed 's/Gi//g')
+
+	# checks if the proportion of the used / total memory is over 50%
+	if (( $(echo "($used_mem / $total_mem)" "<" 0.5 | bc -l) ))
+	then
+		echo '🧠 '$used_mem' G / '$total_mem G
+	else
+		echo '🤯 '$used_mem' G / '$total_mem G
+	fi
 }
 
 get_stg() {
@@ -47,14 +68,20 @@ get_dte_and_tme() {
 	date +'%d %b %y   %k:%M'
 }
 
+#COUNTER=0
+
 while [ true ]
 do
+	#if [ $COUNTER eq 60 ] then
+		#call wallpaper change function
+	#fi
 	get_btry
 	get_cpu_tmp
 	get_gpu_tmp
 	get_mem
 	get_stg
 	get_dte_and_tme
+	#let "COUNTER += 1"
 	sleep 1
 	clear
 done
