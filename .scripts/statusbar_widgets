@@ -2,7 +2,7 @@ get_btry() {
 	bat_status=$(upower -i $(upower -e | grep BAT) | awk '{if($1=="state:") print $2}')
 
 	# checks if the battery is charging
-	if [ $bat_status == 'charging' ]
+	if [ $bat_status == "charging" ]
 	then
 		printf '⚡'
 	else
@@ -23,7 +23,7 @@ get_cpu_tmp() {
 	avg_tmp=$(echo "$total / $count" | bc)
 
 	# checks if the cpu temp is over 45C
-	if [[ $avg_temp -lt 45 ]]
+	if (( $(echo "$avg_tmp < 45" | bc -l) ))
 	then
 		printf "🥶 $avg_tmp°C\n"
 	else
@@ -37,11 +37,11 @@ get_gpu_tmp() {
 	gpu_tmp=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader)
 
 	# checks if the gpu temp is over 45C
-	if [[ $gpu_temp -lt 45 ]]
+	if (( $(echo "$gpu_tmp < 45" | bc -l) ))
 	then
 		printf "❄ $gpu_tmp°C\n"
 	else
-		printf "🔥 $gpu_temp°C\n"
+		printf "🔥 $gpu_tmp°C\n"
 	fi
 }
 
@@ -66,6 +66,16 @@ get_stg() {
 get_dte_and_tme() {
 	printf '📅  '
 	date +'%d %b %y   %k:%M'
+}
+
+get_weather_widgets() {
+	printf '🌙'
+	printf '🌞'
+	printf '⛅'
+	printf '☁'
+	printf '🌧'
+	printf '🌨'
+	printf '🌩'
 }
 
 #COUNTER=0
