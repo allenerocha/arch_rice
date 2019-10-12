@@ -1,5 +1,6 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 #todo
+mediainfo /media/allen/ssd/Music/MUSIC_VIDEOS/BABYMETAL/1997\&1999/01-Legend\ 1997.mp4 | awk ' {if($3=="Chapter") print $0} '
 #mkvmerge -o out_file.mkv --split chapters:[indices] [input]
 

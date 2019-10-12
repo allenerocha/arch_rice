@@ -126,4 +126,5 @@ alias vim='vim -u ~/.config/.vimrc'
 alias ssd='sudo mount /dev/sda /media/allen/ssd/'
 alias scl='cd /media/allen/ssd/school/'
 alias prgm='~/.scripts/prgm'
+alias compilecpp='c++'
 export PATH="~/.scripts:$PATH"
